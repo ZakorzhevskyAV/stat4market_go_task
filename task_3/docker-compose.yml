@@ -1,0 +1,39 @@
+version: '3.4'
+services:
+  app:
+    restart: always
+    networks:
+      - some_network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    environment:
+      CLICKHOUSE_HOST: clickhouse-server_task3
+      CLICKHOUSE_PASSWORD: chpass
+      CLICKHOUSE_USER: chuser
+      CLICKHOUSE_DB: default
+    depends_on:
+      - clickhouse-server_task3
+  clickhouse-server_task3:
+    restart: always
+    networks:
+      some_network:
+        aliases:
+          - clickhouse-server_task3
+    image: yandex/clickhouse-server:latest
+    container_name: clickhouse-server_task3
+    environment:
+      CLICKHOUSE_USER: chuser
+      CLICKHOUSE_PASSWORD: chpass
+      CLICKHOUSE_INIT_TIMEOUT: 70
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    volumes:
+      - ./clickhouse:/var/lib/clickhouse
+    ulimits:
+      nofile: 262144
+networks:
+  some_network:

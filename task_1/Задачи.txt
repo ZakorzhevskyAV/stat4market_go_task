@@ -1,0 +1,11 @@
+Задача 1.
+
+select eventType from events group by eventType having count(1) > 1000
+
+Задача 2.
+
+select * from events where toDayOfMonth(eventDate) = 1
+
+Задача 3.
+
+select userID from events group by userID having count(distinct eventType) > 3
